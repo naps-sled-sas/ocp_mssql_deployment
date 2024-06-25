@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    template.openshift.io/expose-uri: sqlserver://{.spec.clusterIP}:{.spec.ports[?(.name=="sqlserver")].port}
+  name: sqlserver
+spec:
+  ports:
+  - name: sqlserver
+    nodePort: 0
+    port: 1433
+    protocol: TCP
+    targetPort: 1433
+  selector:
+    app: sqlserver
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

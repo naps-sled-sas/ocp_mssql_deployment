@@ -1,0 +1,7 @@
+kind: Kustomization
+resources:
+- database
+secretGenerator:
+- name: sqlserver
+  literals:
+    - SA_PASSWORD="xU14St?prlVUs5tAJop="

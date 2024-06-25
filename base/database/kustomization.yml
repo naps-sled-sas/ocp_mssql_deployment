@@ -1,0 +1,7 @@
+kind: Kustomization
+commonLabels:
+  app: sqlserver
+resources:
+- db-service.yml
+- db-pvc.yml
+- db-deployment.yml

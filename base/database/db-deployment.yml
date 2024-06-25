@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      containers:
+      - name: sqlserver
+        image: mcr.microsoft.com/mssql/rhel/server:2019-latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 4Gi
+            cpu: 4
+          requests:
+            memory: 2Gi
+            cpu: 2
+        env:
+          - name: MSSQL_PID
+            value: "Developer"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: sqlserver
+                key: SA_PASSWORD
+        ports:
+          - containerPort: 1433
+            protocol: TCP
+        volumeMounts:
+          - mountPath: /var/opt/mssql
+            name: sqlserverdb-data
+      volumes:
+      - name: sqlserverdb-data
+        persistentVolumeClaim:
+          claimName: sqlserverdb-data
