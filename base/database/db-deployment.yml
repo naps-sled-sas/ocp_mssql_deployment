@@ -19,10 +19,10 @@ spec:
         resources:
           limits:
             memory: 4Gi
-            cpu: 4
+            cpu: 1000m
           requests:
             memory: 2Gi
-            cpu: 2
+            cpu: 100m
         env:
           - name: MSSQL_PID
             value: "Developer"
@@ -36,10 +36,29 @@ spec:
         ports:
           - containerPort: 1433
             protocol: TCP
+          - containerPort: 5433
+            protocol: TCP
         volumeMounts:
-          - mountPath: /var/opt/mssql
+          - mountPath: /var/opt/mssql/data
             name: sqlserverdb-data
+          - mountPath: /var/opt/mssql/log
+            name: sqlserverdb-log
+          - mountPath: /var/opt/mssql/secrets
+            name: sqlserver-secrets
+          - mountPath: /etc/krb5.conf
+            name: sql-cm-krb5
       volumes:
       - name: sqlserverdb-data
         persistentVolumeClaim:
           claimName: sqlserverdb-data
+      - name: sqlserverdb-log
+        persistentVolumeClaim:
+          claimName: sqlserverdb-log
+      - name: sqlserver-secrets
+        configMap:
+          name: sql-cm-keytab
+          key: mssql.keytab
+      - name: sqlserver-krb5
+        configMap:
+          name: sql-cm-krb5
+          key: krb5.conf

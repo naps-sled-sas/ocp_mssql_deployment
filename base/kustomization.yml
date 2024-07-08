@@ -4,4 +4,11 @@ resources:
 secretGenerator:
 - name: sqlserver
   literals:
-    - SA_PASSWORD="xU14St?prlVUs5tAJop="
+    - SA_PASSWORD=Password123!!
+configMapGenerator:
+- name: sql-cm-keytab
+  files:
+  - mssql.keytab
+- name: sql-cm-krb5
+  files:
+  - krb5.conf
